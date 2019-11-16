@@ -298,7 +298,30 @@ c. 判断线程数是否达到了最大值，如果不是，则创建非核心�
 
 ### 1. Service的定义及作用
 
+Android 的四大组件之一，后台运行、不可交互、运行在主线程中
+
 ### 2. Service两种启动方式 startService、 bindService 区别及生命周期
+
+**startService**：
+
+`onCreate()` --> `onStartCommand()` ------- `onDestroy()`
+
+- 第一次startService的时候会执行onCreate()
+
+- 每次startService会执行onStartCommand()
+
+- Service内部调用stopSelf()或外部调用stopService()就会执行onDestroy()方法，结束service
+
+**bindService**：
+
+`onCreate()` --> `onBind()` ------- `onUnbind()` --> `onDestroy()`
+
+- 第一次bindService的时候会执行onCreate()，onBind()
+
+- bindService()中实现onServiceConnected()完成Client和Service的绑定
+
+- 调用unbindService()将Client与Service断开连接，会执行onUnbind()方法
+- 当所有Client都断开连接，service会执行onDestroy()
 
 ### 3. Service绑定服务的三种实现方式，扩展Binder类、使用Messenger、使用AIDL
 
@@ -306,31 +329,71 @@ c. 判断线程数是否达到了最大值，如果不是，则创建非核心�
 
 ### 5. 服务Service与线程Thread的区别
 
+- Service是Android的组件，运行在主线程，不可以在Service中执行耗时任务，会造成主线程阻塞，最终导致ANR
+- Thread是Java的线程，在Android中可以开启线程，完成耗时任务
+
 ### 6. Android 5.0以上的隐式启动问题及其解决方案
 
 ### 7. 如何保证服务不被杀死
 
+- 前台服务
+- 提升进程优先级
+- 提升服务优先级
+- 监听系统广播拉活
+- APP互相拉活
+- 多进程包活
+
 ### 8. IntentService的使用及原理
+
+IntentService继承与Service。在intentService的onCreate中创建了一个HandlerThread，并且绑定了loop和handler。将handlerMessage方法中抽象出onHandleIntent方法，用于重写实现任务处理。onHandleIntent方法中的任务处理是在onCreate创建的HandlerThread中进行，不会占用主线程，最终实现在service中执行耗时任务。
 
 ## BroadcastReceiver相关
 
 ### 1. BroadcastReceiver定义及作用、应用场景
 
-### 2. BroadcastReceiver的注册方式，静态方式、动态方式
+Android四大组件之一，接收Android系统或应用发送的广播信息，并处理
+
+### 2. BroadcastReceiver的注册方式
+
+**静态方式**：在AndroidManifest.xml文件中创建，开机后就可以接收广播
+
+**动态方式**：在代码中注册，需要手动注销，只有在注册后才能接收广播
 
 ### 3. BroadcastReceiver注册与取消的时机
 
-### 4. BroadcastReceiver的不同类型，普通广播，系统广播、有序广播、粘性广播、应用类广播
+需要成对出现，在onCreate中创建就需要在onDestroy中取消；onResume对应onPause；onStart对应onStop
+
+### 4. BroadcastReceiver的不同类型
+
+普通广播，系统广播、有序广播、粘性广播、应用类广播
 
 ## Fragment相关
 
 ### 1. Fragment生命周期
 
+Created: `onAttach()` --> `onCreate()`  --> `onCreateView()` -->  `onActivityCreated()`
+
+Started: `onStart()`
+
+Resumed: `onResume()`
+
+Paused: `onPause()`
+
+Stopped: `onStop()`
+
+Destroyed: `onDestroyView()` --> `onDestroy()` --> `onDetach()`
+
 ### 2. Fragment的懒加载
+
+Fragement在配合ViewPager使用的时候，每一个Fragment都会执行onAttach到onResume的生命周期方法，在此会调用接口拉取网络数据，但是多个fragment同时被创建并拉取数据浪费流量、影响性能。
+
+可以使用Fragment的一个非生命周期的回调方法：setUserVisibleHint(boolean isVisibleToUser) 。切换ViewPager是当前的fragment可见是，这个方法会返回true，此时再调用fragment的网络请求。
 
 ### 3. Fragment之间的通信
 
 ### 4. FragmentPagerAdapter与FragmentStatePagerAdapter的区别
+
+
 
 ### 5. 为什么不建议直接通过使用new Fragment的方式传入数据
 
