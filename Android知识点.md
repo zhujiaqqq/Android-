@@ -393,9 +393,21 @@ Fragement在配合ViewPager使用的时候，每一个Fragment都会执行onAtta
 
 ### 4. FragmentPagerAdapter与FragmentStatePagerAdapter的区别
 
+**fragmentPagetAdapter**:
 
+使用add添加fragment，attach将添加到fragment展现出来，使用detach将fragment从视图中移除，此时fragment对象并未销毁。
 
-### 5. 为什么不建议直接通过使用new Fragment的方式传入数据
+适用于fragment页面不多且要保存各个页面的状态时
+
+**fragmentStatePagerAdapter**：
+
+使用add将fragment加入视图中，使用remove将fragment移除，会将fragment对象销毁。
+
+适用于fragment数量很多，及时释放对象缓存内存压力
+
+### <u>5. 为什么不建议直接通过使用new Fragment的方式传入数据</u>
+
+系统调用Fragment的时候是通过发射调用的，反射方法构造的fragment只会是那个无参的构造方法
 
 ## 序列化相关
 
@@ -403,11 +415,42 @@ Fragement在配合ViewPager使用的时候，每一个Fragment都会执行onAtta
 
 ### 2. Serializable中serialVersionUID及transient关键字的作用
 
+**serialVersionUID**
+
+JAVA序列化的机制是通过判断类的serialVersionUID来验证的版本一致的。在进行反序列化时，JVM会把传来的字节流中的serialVersionUID于本地相应实体类的serialVersionUID进行比较。如果相同说明是一致的，可以进行反序列化，否则会出现反序列化版本一致的异常。
+
+ **transient**
+
+标记的成员变量不参与序列化过程，一般用于需要成员变量需要自定义序列化过程的时候。
+
 ### 3. 序列化:Parcelable和Serializable差异 
+
+| 对比     | Parcelable         | Serializable                     |
+| -------- | ------------------ | -------------------------------- |
+| 实现方式 | 实现Parcelable接口 | 实现Serializable接口             |
+| 属于     | Android特有的      | Java自带的                       |
+| 内存消耗 | 优秀               | 一般（通过反射实现，容易频繁GC） |
+| 读写数据 | 内存中直接进行读写 | 通过IO流将数据写入硬盘           |
+| 持久化   | 不可以             | 可以                             |
+| 速度     | 优秀               | 一般                             |
 
 ## IPC相关 
 
-### 1. 在Android中什么样的情况下会使用多进程模式，如何开启多进程 
+### 1. 在Android中什么样的情况下会使用多进程模式，如何开启多进程
+
+当应用需要更大的内存是，多进程会分配更多内存；不可见的轻量级私有进程，在后台收发消息，或者做一些耗时的事情，或者开机启动这个进程，然后做监听。
+
+**开启多进程**：在AndroidManifest.xml中对需要独立进程的组件添加process标签
+
+**缺点**：
+
+1. Application的多次重建。
+
+2. 静态成员的失效。
+
+3. 文件共享问题。
+
+4. 断点调试问题。
 
 ### 2. Android为什么采用Binder做为IPC机制
 
@@ -522,8 +565,6 @@ bitmap宽 \* 高 \* 一个像素的字节数
 ### 2. 数据库数据迁移问题
 
 ### 3. GreenDao中一对一，一对多，多对多关系
-
-### 4. SharedPreferences使用及源码，commit与apply()方法的区别
 
 # Android开源框架知识点
 
@@ -777,6 +818,8 @@ singleton = new Singleton()，在线程内部有可能指令从排序，当一�
 
 ### 3. 直接在Activity Sleep 5000ms,再post一个runable会不会ANR
 
+不会
+
 ### 4. 如何监听ANR
 
 - FileObserver监听/data/anr/trace（FileObserver捕获ANR异常,缺点是Android5.0低权限应用不能监听变化“、data/anr/traces.txt”，只能在root之后才可以。）
@@ -972,3 +1015,49 @@ singleton = new Singleton()，在线程内部有可能指令从排序，当一�
 - 里式替换
 
 ### 68. LeakCanary监控原理解析
+
+### 69. Android 项目中 asset 目录和 res 目录有什么区别
+
+- 引用方式不同
+- 是否压缩
+- 是否可以访问多层文件夹下的文件
+
+### 70. SparseArray原理
+
+安卓提供了一个名为SparseArray的数据结构，用来替代小型的以int为key的HashMap，SparseArray牺牲了一些运行性能，用以换取内存节省。
+
+### 71.  invalidate()、requestLayout() 区别
+
+### 72. ArrayList 怎么实现线程安全
+
+- Collections.synchronizedList()
+- 使用Vector
+- 使用CopyOnWriteArrayList
+
+### 73. RelativeLayout与LinerLayout的区别
+
+### 74. 一个无限单向链表如何计算长度，如果有环如何计算长度
+
+### 75. Tinker 为什么需要重启
+
+### 76. TCP怎么做长连接
+
+### 77. 如果子View已经处理了事件，父View怎么拦截子View事件
+
+### 78. 线程状态转换图
+
+### 79. onNewIntent() 调用时机
+
+### 80. setContentView()后面的流程
+
+### 81. WindowManager.addView()，View.getParent()是谁？
+
+### 82. 有多个线程1、2、3、4，1、2、3 并行完后与 4 串行，至少 3 种方式实现
+
+### 83. TCP三次握手、四次挥手
+
+### 84. Android系统启动流程
+
+### 85. epoll 机制的原理
+
+
