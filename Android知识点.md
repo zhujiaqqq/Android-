@@ -1,7 +1,5 @@
 [TOC]
 
-
-
 # JAVA基础知识点
 
 ## JVM相关
@@ -110,7 +108,6 @@
 
   负责加载用户类路径下的类，开发者可以直接使用该类加载器
   
-
 **双亲委派：**如果一个类加载器需要加载类，那么首先它会把这个类请求委派给父类加载器去完成，每一层都是如此。一直递归到顶层，当父加载器无法完成这个请求时，子类才会尝试去加载。
 
 *双亲委派模型不是一种强制性约束，也就是你不这么做也不会报错怎样的，它是一种JAVA设计者推荐使用类加载器的方式。*
@@ -260,7 +257,7 @@ c. 判断线程数是否达到了最大值，如果不是，则创建非核心�
 
 ### 1. 典型状况下的生命周期
 
-`onCreate()` -> `onStart()` -> `onResume()`	---	`onPause()` -> `onStop()` -> `onDestory()`
+`onCreate()` -> `onStart()` -> `onResume()` --- `onPause()` -> `onStop()` -> `onDestory()`
 
 ### 2. 异常情况下的生命周期
 
@@ -405,7 +402,7 @@ Fragement在配合ViewPager使用的时候，每一个Fragment都会执行onAtta
 
 适用于fragment数量很多，及时释放对象缓存内存压力
 
-### <u>5. 为什么不建议直接通过使用new Fragment的方式传入数据</u>
+### 5. 为什么不建议直接通过使用new Fragment的方式传入数据
 
 系统调用Fragment的时候是通过发射调用的，反射方法构造的fragment只会是那个无参的构造方法
 
@@ -415,15 +412,13 @@ Fragement在配合ViewPager使用的时候，每一个Fragment都会执行onAtta
 
 ### 2. Serializable中serialVersionUID及transient关键字的作用
 
-**serialVersionUID**
-
+**serialVersionUID**：
 JAVA序列化的机制是通过判断类的serialVersionUID来验证的版本一致的。在进行反序列化时，JVM会把传来的字节流中的serialVersionUID于本地相应实体类的serialVersionUID进行比较。如果相同说明是一致的，可以进行反序列化，否则会出现反序列化版本一致的异常。
 
- **transient**
-
+**transient**：
 标记的成员变量不参与序列化过程，一般用于需要成员变量需要自定义序列化过程的时候。
 
-### 3. 序列化:Parcelable和Serializable差异 
+### 3. 序列化:Parcelable和Serializable差异
 
 | 对比     | Parcelable         | Serializable                     |
 | -------- | ------------------ | -------------------------------- |
@@ -434,7 +429,7 @@ JAVA序列化的机制是通过判断类的serialVersionUID来验证的版本一
 | 持久化   | 不可以             | 可以                             |
 | 速度     | 优秀               | 一般                             |
 
-## IPC相关 
+## IPC相关
 
 ### 1. 在Android中什么样的情况下会使用多进程模式，如何开启多进程
 
@@ -456,11 +451,11 @@ JAVA序列化的机制是通过判断类的serialVersionUID来验证的版本一
 
 ### 3. IPC常用方式
 
-   使用Bundle、使用文件共享、使用Messenger、使用AIDL、使用 ContentProvider、使用Socket 
+   使用Bundle、使用文件共享、使用Messenger、使用AIDL、使用 ContentProvider、使用Socket
 
 ### 4. AIDL的语义
 
-### 5. AIDL如何创建 AIDL生成Java文件详细分析 
+### 5. AIDL如何创建 AIDL生成Java文件详细分析
 
 ## View事件机制相关
 
@@ -528,13 +523,13 @@ JAVA序列化的机制是通过判断类的serialVersionUID来验证的版本一
 
 ## SharedPreference相关
 
-### 1. 获取 SharedPreferences 对象过程中，系统做了什么?
+### 1. 获取 SharedPreferences 对象过程中，系统做了什么
 
-### 2. getXxx 方法做了什么?
+### 2. getXxx 方法做了什么
 
-### 3. putXxx方法做了什么?
+### 3. putXxx方法做了什么
 
-### 4. commit/apply方法如何实现同步/异步写磁盘?
+### 4. commit/apply方法如何实现同步/异步写磁盘
 
 ## Bitmap压缩回收相关
 
@@ -554,9 +549,9 @@ bitmap宽 \* 高 \* 一个像素的字节数
 
 ## ListView与RecyclerView相关
 
-### 1. ListView的原理和复用机制 
+### 1. ListView的原理和复用机制
 
-### 2. ListView和RecyclerView的区别 
+### 2. ListView和RecyclerView的区别
 
 ## 数据存储相关
 
@@ -572,13 +567,13 @@ bitmap宽 \* 高 \* 一个像素的字节数
 
 ### 1. OkHttp的优点
 
-### 2. OkHttp执行请求的整个流程 
+### 2. OkHttp执行请求的整个流程
 
-### 3. OkHttp中的拦截器 
+### 3. OkHttp中的拦截器
 
-### 4. OkHttp中的同步请求与异步请求的理解及其源码 
+### 4. OkHttp中的同步请求与异步请求的理解及其源码
 
-### 5. OkHttp中涉及到的设计模式 
+### 5. OkHttp中涉及到的设计模式
 
 ### 6. OkHttp底层网络请求实现，socket还是URLConnection
 
@@ -632,11 +627,11 @@ bitmap宽 \* 高 \* 一个像素的字节数
 
 ## Android性能优化
 
-### 1. 性能优化布局优化、绘制优化、线程优化等 
+### 1. 性能优化布局优化、绘制优化、线程优化等
 
 ### 2. ANR异常
 
-   主线程执行了耗时操作，如BroadcastReceiver(前台广播10s,后台广播为60s)、 Service(前台20s,后台200s)没有处理完相关任务等 
+   主线程执行了耗时操作，如BroadcastReceiver(前台广播10s,后台广播为60s)、 Service(前台20s,后台200s)没有处理完相关任务等
 
 1. 耗时的网络访问
 2. 大量的数据读写
@@ -653,7 +648,7 @@ bitmap宽 \* 高 \* 一个像素的字节数
 
 ### 4. 内存泄漏
 
-   内存泄露的几种场景，如单例模式引出的泄露、静态变量导致的泄露、属性动画 导致的内存泄露等 
+   内存泄露的几种场景，如单例模式引出的泄露、静态变量导致的泄露、属性动画 导致的内存泄露等
 
 ## Android屏幕适配知识点
 
@@ -693,7 +688,7 @@ bitmap宽 \* 高 \* 一个像素的字节数
 
 ### 2. TCP与UDP的理解与区别
 
-### 3. Http(HyberText Transfer Protocol)基本概念及报文结构 
+### 3. Http(HyberText Transfer Protocol)基本概念及报文结构
 
 ### 4. Http常⻅错误码
 
@@ -725,7 +720,7 @@ bitmap宽 \* 高 \* 一个像素的字节数
 
 ### 7. Http中cookie与session的区别
 
-### 8. Http与Https的区别 Https加密算法相关面试问题，签名证书，公钥私钥、数字摘要的理解 
+### 8. Http与Https的区别 Https加密算法相关面试问题，签名证书，公钥私钥、数字摘要的理解
 
 ## 设计模式知识点
 
@@ -765,14 +760,13 @@ bitmap宽 \* 高 \* 一个像素的字节数
 
 ### 11. 万亿级别的两个URL文件A和B，如何求出A和B的差集C(提示：Bit映射->hash分组->多文件读写效率->磁盘寻址以及应用层面对寻址的优化)
 
-### 12. 两个不重复的数组集合中，求共同的元素。
+### 12. 两个不重复的数组集合中，求共同的元素
 
 ### 13. 两个不重复的数组集合中，这两个集合都是海量数据，内存中放不下，怎么求共同的元素
 
 ### 14. 一个文件中有100万个整数，由空格分开，在程序中判断用户输入的整数是否在此文件中。说出最优的方法
 
 ### 15. 一张Bitmap所占内存以及内存占用的计算
-
 
 ### 16. 2000万个整数，找出第五十大的数字
 
@@ -951,9 +945,9 @@ singleton = new Singleton()，在线程内部有可能指令从排序，当一�
 
 ### 46. Android 沉浸式状态栏 怎么实现的
 
-### 47. 事件处理函数有哪几个,父View 子View 监听同一个事件,重写哪些方法。在哪个View重写?
+### 47. 事件处理函数有哪几个,父View 子View 监听同一个事件,重写哪些方法。在哪个View重写
 
-### 48. ViewRootImpl接受事件吗?
+### 48. ViewRootImpl接受事件吗
 
 ### 49. 利用logging监听方法耗时，会不会让app增大延迟
 
@@ -967,13 +961,13 @@ singleton = new Singleton()，在线程内部有可能指令从排序，当一�
 
 ### 54. 接口暴露,但是不让别人调用,有哪些办法
 
-### 55. 为什么采用flatbuffer? 比Json好在哪里?
+### 55. 为什么采用flatbuffer? 比Json好在哪里
 
-### 56. 如何处理Crash,NativeCrash呢?Google是怎么做到的?如果上报过程中再次产生Crash能不能捕捉到?
+### 56. 如何处理Crash,NativeCrash呢?Google是怎么做到的?如果上报过程中再次产生Crash能不能捕捉到
 
-### 57. uncaughtException是被谁调用的,如果再次崩溃能不能捕获到?
+### 57. uncaughtException是被谁调用的,如果再次崩溃能不能捕获到
 
-### 58. Linux是怎么知道app崩溃的,如果想要在被kill前 做一些耗时操作,该怎么做?
+### 58. Linux是怎么知道app崩溃的,如果想要在被kill前 做一些耗时操作,该怎么做
 
 ### 59. 考虑设计一个crash捕捉模块
 
@@ -985,9 +979,9 @@ singleton = new Singleton()，在线程内部有可能指令从排序，当一�
 
 ### 62. 如何防止DNS劫持
 
-### 63. 如果让你实现一个调试器,你会怎么设计?静态调试?动态调试呢?
+### 63. 如果让你实现一个调试器,你会怎么设计?静态调试?动态调试呢
 
-### 64. 一个应用程序安装到手机上的过程发生了什么？
+### 64. 一个应用程序安装到手机上的过程发生了什么
 
 ### 65. RecyclerView的缓存机制
 
@@ -1050,7 +1044,7 @@ singleton = new Singleton()，在线程内部有可能指令从排序，当一�
 
 ### 80. setContentView()后面的流程
 
-### 81. WindowManager.addView()，View.getParent()是谁？
+### 81. WindowManager.addView()，View.getParent()是谁
 
 ### 82. 有多个线程1、2、3、4，1、2、3 并行完后与 4 串行，至少 3 种方式实现
 
@@ -1059,5 +1053,3 @@ singleton = new Singleton()，在线程内部有可能指令从排序，当一�
 ### 84. Android系统启动流程
 
 ### 85. epoll 机制的原理
-
-
