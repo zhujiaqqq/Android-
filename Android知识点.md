@@ -416,7 +416,6 @@
 
   负责加载用户类路径下的类，开发者可以直接使用该类加载器
   
-
 **双亲委派：**如果一个类加载器需要加载类，那么首先它会把这个类请求委派给父类加载器去完成，每一层都是如此。一直递归到顶层，当父加载器无法完成这个请求时，子类才会尝试去加载。
 
 *双亲委派模型不是一种强制性约束，也就是你不这么做也不会报错怎样的，它是一种JAVA设计者推荐使用类加载器的方式。*
@@ -426,7 +425,6 @@
 ### 1. ArrayList分析
 
 - 内部数组实现
-
 - 默认容量10
 - 每次扩容为之前的1.5倍
 - 数据减少的时候容量不会减少
@@ -1086,7 +1084,7 @@ Android设备的屏幕尺寸、分辨率都有不同，所以在布局的时候�
 
 ### 1. 常⻅的八大排序方式
 
-### 2. 时间复杂度的计算
+### ~~2. 时间复杂度的计算~~
 
 ### 3. 链表相关算法，链表翻转，链表合并等
 
@@ -1110,11 +1108,22 @@ Android设备的屏幕尺寸、分辨率都有不同，所以在布局的时候�
 
 ### 13. 两个不重复的数组集合中，这两个集合都是海量数据，内存中放不下，怎么求共同的元素
 
+海量数据求交集
+
+- 使用数据的hash或者hash的余数进行遍历
+- 使用布隆过滤器（全网爬虫经常用到，radis插件有布隆过滤器功能）
+
 ### 14. 一个文件中有100万个整数，由空格分开，在程序中判断用户输入的整数是否在此文件中。说出最优的方法
 
 ### 15. 一张Bitmap所占内存以及内存占用的计算
 
+- bitmap的宽度
+- bitmap的高度
+- 一个像素的大小
+
 ### 16. 2000万个整数，找出第五十大的数字
+
+使用小顶堆（优先队列可实现）：时间复杂度：50个元素的堆，在插入数据的时候会重新堆化O(nlogn)，对于50是个常数，2000w次遍历，所以复杂度为O(1)
 
 ### 17. 求1000以内的水仙花数以及40亿以内的水仙花数
 
@@ -1134,6 +1143,8 @@ Android设备的屏幕尺寸、分辨率都有不同，所以在布局的时候�
 - 使用静态工厂模式
 
 ### 2. 手写单例，DCL为什么要加Volatile关键字
+
+考察：volatile禁止从排序的知识点
 
 ```java
 public class Singleton {  
@@ -1158,7 +1169,7 @@ singleton = new Singleton()，在线程内部有可能指令从排序，当一�
 
 ### 3. 直接在Activity Sleep 5000ms,再post一个runable会不会ANR
 
-不会
+不会，如果还有其他事件触发，事件被阻塞超过5s才会anr
 
 ### 4. 如何监听ANR
 
@@ -1258,6 +1269,50 @@ native层，使用IO多路复用机制
 额度为0.01到剩余平均值*2之间
 
 ### 19. 手写一个二叉树的深度优先遍历,递归 非递归
+
+```java
+public void BFS(TreeNode treeNode) {
+        if (treeNode == null) {
+            return;
+        }
+//        以队列的形式存储
+        Deque<TreeNode> deque = new ArrayDeque<>();
+        deque.add(treeNode);
+        while (!deque.isEmpty()) {
+            TreeNode poll = deque.poll();
+            // TODO: 2019-11-24 处理
+            System.out.println(poll.data + "");
+
+            if (poll.leftNode != null) {
+                deque.add(poll.leftNode);
+            }
+            if (poll.rightNode != null) {
+                deque.add(poll.rightNode);
+            }
+        }
+    }
+
+    public void DFS(TreeNode treeNode) {
+        if (treeNode == null) {
+            return;
+        }
+//        以栈的形式存储
+        Deque<TreeNode> deque = new ArrayDeque<>();
+        deque.add(treeNode);
+        while (!deque.isEmpty()) {
+            TreeNode pop = deque.pop();
+            // TODO: 2019-11-24 处理
+            System.out.println(pop.data + "");
+
+            if (pop.rightNode != null) {
+                deque.add(pop.rightNode);
+            }
+            if (pop.leftNode != null) {
+                deque.add(pop.leftNode);
+            }
+        }
+    }
+```
 
 ### 20. Android中LocalServerSocket是干什么用的
 
