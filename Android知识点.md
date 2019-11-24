@@ -416,6 +416,7 @@
 
   负责加载用户类路径下的类，开发者可以直接使用该类加载器
   
+
 **双亲委派：**如果一个类加载器需要加载类，那么首先它会把这个类请求委派给父类加载器去完成，每一层都是如此。一直递归到顶层，当父加载器无法完成这个请求时，子类才会尝试去加载。
 
 *双亲委派模型不是一种强制性约束，也就是你不这么做也不会报错怎样的，它是一种JAVA设计者推荐使用类加载器的方式。*
@@ -769,7 +770,11 @@ JAVA序列化的机制是通过判断类的serialVersionUID来验证的版本一
 
 ### 1. View的坐标体系
 
-### 2. View滑动的几种方式，使用ScrollTo/ScrollBy、使用动画、改变布局参数
+### 2. View滑动的几种方式
+
+- 使用ScrollTo/ScrollBy
+- 使用动画
+- 改变布局参数
 
 ### 3. 弹性滑动的原理及实现
 
@@ -962,9 +967,42 @@ bitmap宽 \* 高 \* 一个像素的字节数
 
 ### 1. 今日头条适配方式
 
+android中的dp在渲染前会将dp转为px，计算公式：
+px = density * dp;
+density = dpi / 160;
+px = dp * (dpi / 160);
+
+计算dpi：
+![计算dpi](https://raw.githubusercontent.com/zhujiaqqq/daily-pic/master/img/20191123190546.png)
+
+所以不同的设备，dpi不一样，导致像素密度density不同，最终导致px和dp的映射关系不同。
+
+Android提供的获取像素密度的api：
+
+- DisplayMetrics#density 就是上述的density
+- DisplayMetrics#densityDpi 就是上述的dpi
+- DisplayMetrics#scaledDensity 字体的缩放因子，正常情况下和density相等，但是调节系统字体大小后会改变这个值
+
+Android设备的屏幕尺寸、分辨率都有不同，所以在布局的时候我们无法通过设置像素（px）来设置宽高，通过dp设置宽高可以一定程度解决，但是还是会有比例失真的情况。
+
+所以需要改变系统计算的像素密度，来调节px和dp之间的映射关系。
+
+默认情况：
+
+- 以宽维度进行适配
+- 原型图宽度360px
+
+这么算下来 density = 设备真实宽(单位px) / 360
+
+所以修改DisplayMetrics的成员变量：density、densityDpi、scaledDensity，其中scaledDensity需要先计算出原scaledDensity与density的比例然后将计算出的density乘以这个比例，这样文字大小也就适配来，当系统配置变化的时候需要重新计算这个比例。
+
 ### 2. 宽高限定符适配方式
 
 ### 3. smallestWidth适配
+
+- 通过像素密度和宽边的像素计算1-360dp的真实值
+- 通过加入大量不同尺寸屏幕是dimens.xml覆盖绝大多数机型
+- 使用的时候，所有尺寸都通过dimens.xml中的资源去配置
 
 ## Android打包知识点
 
@@ -1135,7 +1173,48 @@ singleton = new Singleton()，在线程内部有可能指令从排序，当一�
 
 ### 6. 安装包优化
 
+安装包体积的影响
+
+- 转化率
+- 安装时间
+- 运行内存
+- ROM空间（老设备写入方法问题）
+
+安装包中内容：
+
+- Dex：Classes.dex ClassesN.dex
+- res/
+- assets/
+- Native Libraries
+- META-INFO/
+- AndroidManifest.xml
+- resources.arsc
+
+优化方向：
+
+- ProGuard
+
+  - 检查最终合并的 ProGuard 配置文件，是不是存在过度 keep 的现象
+  - 非 exported的四大组件以及 View 混淆，然后替换xml和代码中断字符串
+- Dex分包
+  一个Dex中有defines methods 和references methods两种，加起来不能超过65536个，所有当分包当时候可以降低dex中当references methods来降低总方法数，从而降低包体积
+- Dex压缩
+  classes.dex作为一个壳，真实的dex放到assets中进行压缩存储（fackbook在用）
+- Native Library
+  - 去除 Debug 信息
+  - 使用C++shared
+  - 保留启动相关的so库，其他so库在首次启动的时候进行解压
+  - Library合并与裁剪
+- 资源混淆：目的是缩短路径
+- 资源合并
+- 无用资源
+  - Lint
+  - shrinkResources
+
 ### 7. 如果有A,B,C,D,E五个步骤,每个步骤都需要操作对应请求,用哪种设计模式
+
+状态设计模式
+![状态设计模式](https://raw.githubusercontent.com/zhujiaqqq/daily-pic/master/img/20191123220100.gif)
 
 ### 8. 如果让你设计一个app,打算怎么设计
 
@@ -1151,6 +1230,8 @@ singleton = new Singleton()，在线程内部有可能指令从排序，当一�
 
 ### 10. Android主线程是怎么启动的
 
+在ActivityThread.main()方法
+
 ### 11. dex是如何转为机器码的
 
 ### 12. llvm编译是如何优化代码的
@@ -1163,6 +1244,11 @@ singleton = new Singleton()，在线程内部有可能指令从排序，当一�
 
 ### 15. looper的唤醒是在Java还是Native层,怎么做到的
 
+native层，使用IO多路复用机制
+
+- epoll_wait：等待
+- epoll_ctl：唤醒
+
 ### 16. 跨平台开发熟不熟悉
 
 ### 17. 如何提高海外用户的访问速度,假设服务器在深圳
@@ -1171,7 +1257,7 @@ singleton = new Singleton()，在线程内部有可能指令从排序，当一�
 
 额度为0.01到剩余平均值*2之间
 
-### 19. 手写一个二叉树的深度度优先遍历,递归 非递归
+### 19. 手写一个二叉树的深度优先遍历,递归 非递归
 
 ### 20. Android中LocalServerSocket是干什么用的
 
@@ -1361,3 +1447,20 @@ singleton = new Singleton()，在线程内部有可能指令从排序，当一�
 ### 84. Android系统启动流程
 
 ### 85. epoll 机制的原理
+
+### 86. UI渲染优化
+
+一般做法：
+
+- 减少布局嵌套：ConstraintLayout
+- 使用ViewStub按需初始化布局
+- 使用merge标签减少嵌套
+- 减少过度绘制（每层的背景）
+- 使用Hardware Layout对view加速渲染
+
+高级做法：
+
+- LayoutInflater.inflate()中XmlResourceParser解析速度慢，可以使用java代码替代xml，X2C框架
+- 使用预编译好的view进行加载，节省解析和反射创建的过程（10系统）
+
+- 异步加载布局
